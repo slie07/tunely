@@ -40,6 +40,28 @@ sampleAlbums.push({
 $(document).ready(function() {
   console.log('app.js loaded!');
 
+
+$.get("/api/albums", function(albums){
+  console.log("heres my albums");
+  albums.forEach(function(oneAlbum){
+    renderAlbum(oneAlbum);
+  });
+  console.log(albums);
+});
+  // sampleAlbums.forEach(function(album){
+  //   renderAlbum(album);
+  
+  $( "#album-form form" ).on( "submit", function( event ) {
+  event.preventDefault();
+  var formData = $(this).serialize();
+  $.post('/api/albums', formData, function(album){
+    renderAlbum(album);
+  });
+  $(this).trigger("reset");
+  
+
+});
+
 });
 
 
@@ -63,15 +85,15 @@ function renderAlbum(album) {
   "                    <ul class='list-group'>" +
   "                      <li class='list-group-item'>" +
   "                        <h4 class='inline-header'>Album Name:</h4>" +
-  "                        <span class='album-name'>" + "HARDCODED ALBUM NAME" + "</span>" +
+  "                        <span class='album-name'>" + album.name + "</span>" +
   "                      </li>" +
   "                      <li class='list-group-item'>" +
   "                        <h4 class='inline-header'>Artist Name:</h4>" +
-  "                        <span class='artist-name'>" +  "HARDCODED ARTIST NAME"+ "</span>" +
+  "                        <span class='artist-name'>" +  album.artistName+ "</span>" +
   "                      </li>" +
   "                      <li class='list-group-item'>" +
   "                        <h4 class='inline-header'>Released date:</h4>" +
-  "                        <span class='album-releaseDate'>" + "HARDCODED ALBUM RELEASE" + "</span>" +
+  "                        <span class='album-releaseDate'>" + album.releaseDate + "</span>" +
   "                      </li>" +
   "                    </ul>" +
   "                  </div>" +
@@ -81,5 +103,16 @@ function renderAlbum(album) {
   "          <!-- end one album -->";
 
   // render to the page with jQuery
+  $("#albums").append(albumHtml);
 
+}
+
+
+function buildSongHtml(songs){
+  var songText=" - ";
+  songs.forEach(function(song){
+    songText = songText+ '('+ song.trackNumber+') '+ song.name + ' - ' ;
+  });
+  var songsHtml = " "+ songText +" ";
+  return songsHtml;
 }
